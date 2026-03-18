@@ -1,5 +1,8 @@
 # SubGHz Signal Generator
 
+I made this because I'm pretty sure nothing like it exists for android and it goes hand in hand with doing things on the fly. It's convenient, fast and pretty user friendly. There may be bugs but overall it's functional as is.  That being said, it's open source... fork it, improve it, enjoy it! If it helped you, great, I expect nothing in return except proper credit if necessary. I've also included a pre-built app in app/build/*
+
+
 An Android app for generating Flipper Zero `.sub` files directly on your phone. Create, convert, inspect, and audibly preview sub-GHz signals without needing a PC.
 
 ## Features
@@ -47,13 +50,9 @@ Built with Jetpack Compose and Kotlin. Standard Android Gradle build:
 ```
 ./gradlew assembleDebug
 ```
+Build on my Samsung S22 using a fork of the old AndroidIDE app, now called Android Code Studio. 
+https://github.com/AndroidCSOfficial/android-code-studio
 
 ## License
 
 MIT
-
-Build on my Samsung S22 using a fork of the old AndroidIDE app, now called Android Code Studio. 
-https://github.com/AndroidCSOfficial/android-code-studio
-
-
-		*** I made this because I'm pretty sure nothing like it exists for android and it goes hand in hand with doing things on the fly. It's convenient, fast and pretty user friendly. There may be bugs but overall it's functional as is.  That being said, it's open source... fork it, improve it, enjoy it! If it helped you, great, I expect nothing in return except proper credit if necessary. I've also included a pre-built app in app/build/*
