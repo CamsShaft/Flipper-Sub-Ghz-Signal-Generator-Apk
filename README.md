@@ -50,8 +50,11 @@ Built with Jetpack Compose and Kotlin. Standard Android Gradle build:
 ```
 ./gradlew assembleDebug
 ```
-Build on my Samsung S22 using a fork of the old AndroidIDE app, now called Android Code Studio. 
+Built on my Samsung S22 using a fork of the old AndroidIDE app, now called Android Code Studio. 
 https://github.com/AndroidCSOfficial/android-code-studio
+
+## Warning
+I suppose I need to include this to cover my ass. It is NOT my responsibility for what YOU choose to do with the capabilities made available in this app. I made it as a means for security testing and possible scientific research to make it easier for anyone just starting out or for professionals, not so you can try to break into your neighbors' shitty tesla truck. Thank you.
 
 ## License
 
