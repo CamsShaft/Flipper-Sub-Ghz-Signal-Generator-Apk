@@ -40,13 +40,13 @@ fun ConverterScreen(
 
     var selectedFrequency by remember { mutableStateOf(SubGhzFrequency.DEFAULT) }
     var selectedPreset by remember { mutableStateOf(SubGhzPreset.DEFAULT) }
-    var minUs by remember { mutableIntStateOf(100) }
-    var maxUs by remember { mutableIntStateOf(2000) }
-    var repeatCount by remember { mutableIntStateOf(5) }
-    var gapUs by remember { mutableIntStateOf(10000) }
+    var minUsText by remember { mutableStateOf("100") }
+    var maxUsText by remember { mutableStateOf("2000") }
+    var repeatCountText by remember { mutableStateOf("5") }
+    var gapUsText by remember { mutableStateOf("10000") }
     var selectedEncoding by remember { mutableStateOf(SignalEncoding.PWM) }
-    var shortUs by remember { mutableIntStateOf(350) }
-    var longUs by remember { mutableIntStateOf(1050) }
+    var shortUsText by remember { mutableStateOf("350") }
+    var longUsText by remember { mutableStateOf("1050") }
 
     var outputName by remember { mutableStateOf("converted") }
 
@@ -213,15 +213,15 @@ fun ConverterScreen(
                         if (selectedEncoding == SignalEncoding.RAW) {
                             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                                 SubGhzTextField(
-                                    value = minUs.toString(),
-                                    onValueChange = { minUs = it.toIntOrNull()?.coerceIn(10, 10000) ?: 100 },
+                                    value = minUsText,
+                                    onValueChange = { minUsText = it.filter { c -> c.isDigit() } },
                                     label = "Min µs",
                                     keyboardType = KeyboardType.Number,
                                     modifier = Modifier.weight(1f)
                                 )
                                 SubGhzTextField(
-                                    value = maxUs.toString(),
-                                    onValueChange = { maxUs = it.toIntOrNull()?.coerceIn(10, 50000) ?: 2000 },
+                                    value = maxUsText,
+                                    onValueChange = { maxUsText = it.filter { c -> c.isDigit() } },
                                     label = "Max µs",
                                     keyboardType = KeyboardType.Number,
                                     modifier = Modifier.weight(1f)
@@ -230,15 +230,15 @@ fun ConverterScreen(
                         } else {
                             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                                 SubGhzTextField(
-                                    value = shortUs.toString(),
-                                    onValueChange = { shortUs = it.toIntOrNull()?.coerceIn(50, 10000) ?: 350 },
+                                    value = shortUsText,
+                                    onValueChange = { shortUsText = it.filter { c -> c.isDigit() } },
                                     label = "Short (µs)",
                                     keyboardType = KeyboardType.Number,
                                     modifier = Modifier.weight(1f)
                                 )
                                 SubGhzTextField(
-                                    value = longUs.toString(),
-                                    onValueChange = { longUs = it.toIntOrNull()?.coerceIn(50, 50000) ?: 1050 },
+                                    value = longUsText,
+                                    onValueChange = { longUsText = it.filter { c -> c.isDigit() } },
                                     label = "Long (µs)",
                                     keyboardType = KeyboardType.Number,
                                     modifier = Modifier.weight(1f)
@@ -257,15 +257,15 @@ fun ConverterScreen(
 
                 Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                     SubGhzTextField(
-                        value = repeatCount.toString(),
-                        onValueChange = { repeatCount = it.toIntOrNull()?.coerceIn(1, 100) ?: 5 },
+                        value = repeatCountText,
+                        onValueChange = { repeatCountText = it.filter { c -> c.isDigit() } },
                         label = "Repeats",
                         keyboardType = KeyboardType.Number,
                         modifier = Modifier.weight(1f)
                     )
                     SubGhzTextField(
-                        value = gapUs.toString(),
-                        onValueChange = { gapUs = it.toIntOrNull()?.coerceIn(100, 100000) ?: 10000 },
+                        value = gapUsText,
+                        onValueChange = { gapUsText = it.filter { c -> c.isDigit() } },
                         label = "Gap (µs)",
                         keyboardType = KeyboardType.Number,
                         modifier = Modifier.weight(1f)
@@ -276,6 +276,10 @@ fun ConverterScreen(
             SubGhzButton(
                 text = "Convert to Signal",
                 onClick = {
+                    val minUs = minUsText.toIntOrNull()?.coerceIn(10, 10000) ?: 100
+                    val maxUs = maxUsText.toIntOrNull()?.coerceIn(10, 50000) ?: 2000
+                    val shortUs = shortUsText.toIntOrNull()?.coerceIn(50, 10000) ?: 350
+                    val longUs = longUsText.toIntOrNull()?.coerceIn(50, 50000) ?: 1050
                     parsedTimings = when (sourceType) {
                         0 -> {
                             val bytes = loadedData ?: return@SubGhzButton
@@ -334,6 +338,8 @@ fun ConverterScreen(
                 SubGhzButton(
                     text = "Export .sub File",
                     onClick = {
+                        val repeatCount = repeatCountText.toIntOrNull()?.coerceIn(1, 100) ?: 5
+                        val gapUs = gapUsText.toIntOrNull()?.coerceIn(100, 100000) ?: 10000
                         val signal = SubGhzSignal(
                             frequency = freq,
                             preset = selectedPreset,

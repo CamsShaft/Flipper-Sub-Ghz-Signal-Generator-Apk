@@ -20,7 +20,7 @@ fun InspectorScreen(
 ) {
     var isPlaying by remember { mutableStateOf(false) }
     var playbackProgress by remember { mutableFloatStateOf(0f) }
-    var timeScale by remember { mutableFloatStateOf(50f) }
+    var timeScaleText by remember { mutableStateOf("50") }
     var carrierFreq by remember { mutableStateOf("800") }
 
     val stats = remember(timings) {
@@ -125,8 +125,8 @@ fun InspectorScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 SubGhzTextField(
-                    value = "%.0f".format(timeScale),
-                    onValueChange = { timeScale = it.toFloatOrNull()?.coerceIn(1f, 500f) ?: 50f },
+                    value = timeScaleText,
+                    onValueChange = { timeScaleText = it.filter { c -> c.isDigit() || c == '.' } },
                     label = "Time Scale",
                     keyboardType = KeyboardType.Number,
                     modifier = Modifier.weight(1f)
@@ -162,6 +162,7 @@ fun InspectorScreen(
                             isPlaying = true
                             playbackProgress = 0f
                             val freq = carrierFreq.toDoubleOrNull() ?: 800.0
+                            val timeScale = timeScaleText.toFloatOrNull()?.coerceIn(1f, 500f) ?: 50f
                             audioEngine.play(
                                 timings = timings,
                                 timeScale = timeScale,

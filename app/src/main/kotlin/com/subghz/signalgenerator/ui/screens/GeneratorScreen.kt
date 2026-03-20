@@ -38,9 +38,9 @@ fun GeneratorScreen(
     var selectedFrequency by remember { mutableStateOf(SubGhzFrequency.DEFAULT) }
     var customFrequencyHz by remember { mutableStateOf("433920000") }
     var selectedPreset by remember { mutableStateOf(SubGhzPreset.DEFAULT) }
-    var selectedProtocol by remember { mutableStateOf(SubGhzKnownProtocol.RAW) }
-    var repeatCount by remember { mutableIntStateOf(5) }
-    var gapUs by remember { mutableIntStateOf(10000) }
+    var selectedProtocol by remember { mutableStateOf(SubGhzKnownProtocol.PRINCETON) }
+    var repeatCountText by remember { mutableStateOf("5") }
+    var gapUsText by remember { mutableStateOf("10000") }
 
     // Input mode
     var inputMode by remember { mutableIntStateOf(0) }
@@ -48,22 +48,22 @@ fun GeneratorScreen(
 
     // Protocol-specific
     var protocolCode by remember { mutableStateOf("") }
-    var pulseUs by remember { mutableIntStateOf(350) }
+    var pulseUsText by remember { mutableStateOf("350") }
 
     // Raw/Binary/Hex input
     var rawInput by remember { mutableStateOf("") }
     var selectedEncoding by remember { mutableStateOf(SignalEncoding.PWM) }
-    var shortUs by remember { mutableIntStateOf(350) }
-    var longUs by remember { mutableIntStateOf(1050) }
+    var shortUsText by remember { mutableStateOf("350") }
+    var longUsText by remember { mutableStateOf("1050") }
 
     // Byte-to-timing parameters
-    var minUs by remember { mutableIntStateOf(100) }
-    var maxUs by remember { mutableIntStateOf(2000) }
+    var minUsText by remember { mutableStateOf("100") }
+    var maxUsText by remember { mutableStateOf("2000") }
 
     // DTMF parameters
     var dtmfSequence by remember { mutableStateOf("") }
-    var dtmfToneMs by remember { mutableIntStateOf(100) }
-    var dtmfPauseMs by remember { mutableIntStateOf(100) }
+    var dtmfToneMsText by remember { mutableStateOf("100") }
+    var dtmfPauseMsText by remember { mutableStateOf("100") }
     var dtmfSampleRate by remember { mutableIntStateOf(8000) }
 
     // Generated signal
@@ -107,15 +107,15 @@ fun GeneratorScreen(
 
             Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 SubGhzTextField(
-                    value = repeatCount.toString(),
-                    onValueChange = { repeatCount = it.toIntOrNull()?.coerceIn(1, 100) ?: 5 },
+                    value = repeatCountText,
+                    onValueChange = { repeatCountText = it.filter { c -> c.isDigit() } },
                     label = "Repeats",
                     keyboardType = KeyboardType.Number,
                     modifier = Modifier.weight(1f)
                 )
                 SubGhzTextField(
-                    value = gapUs.toString(),
-                    onValueChange = { gapUs = it.toIntOrNull()?.coerceIn(100, 100000) ?: 10000 },
+                    value = gapUsText,
+                    onValueChange = { gapUsText = it.filter { c -> c.isDigit() } },
                     label = "Gap (µs)",
                     keyboardType = KeyboardType.Number,
                     modifier = Modifier.weight(1f)
@@ -137,8 +137,7 @@ fun GeneratorScreen(
                     SubGhzDropdown(
                         label = "Protocol",
                         items = SubGhzKnownProtocol.entries.filter { it != SubGhzKnownProtocol.RAW },
-                        selectedItem = if (selectedProtocol == SubGhzKnownProtocol.RAW)
-                            SubGhzKnownProtocol.PRINCETON else selectedProtocol,
+                        selectedItem = selectedProtocol,
                         onItemSelected = { selectedProtocol = it },
                         itemLabel = { it.label }
                     )
@@ -151,8 +150,8 @@ fun GeneratorScreen(
                     )
 
                     SubGhzTextField(
-                        value = pulseUs.toString(),
-                        onValueChange = { pulseUs = it.toIntOrNull()?.coerceIn(50, 5000) ?: 350 },
+                        value = pulseUsText,
+                        onValueChange = { pulseUsText = it.filter { c -> c.isDigit() } },
                         label = "Base Pulse Width (µs)",
                         keyboardType = KeyboardType.Number
                     )
@@ -179,15 +178,15 @@ fun GeneratorScreen(
 
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         SubGhzTextField(
-                            value = shortUs.toString(),
-                            onValueChange = { shortUs = it.toIntOrNull()?.coerceIn(50, 10000) ?: 350 },
+                            value = shortUsText,
+                            onValueChange = { shortUsText = it.filter { c -> c.isDigit() } },
                             label = "Short (µs)",
                             keyboardType = KeyboardType.Number,
                             modifier = Modifier.weight(1f)
                         )
                         SubGhzTextField(
-                            value = longUs.toString(),
-                            onValueChange = { longUs = it.toIntOrNull()?.coerceIn(50, 50000) ?: 1050 },
+                            value = longUsText,
+                            onValueChange = { longUsText = it.filter { c -> c.isDigit() } },
                             label = "Long (µs)",
                             keyboardType = KeyboardType.Number,
                             modifier = Modifier.weight(1f)
@@ -205,15 +204,15 @@ fun GeneratorScreen(
 
                     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                         SubGhzTextField(
-                            value = minUs.toString(),
-                            onValueChange = { minUs = it.toIntOrNull()?.coerceIn(10, 10000) ?: 100 },
+                            value = minUsText,
+                            onValueChange = { minUsText = it.filter { c -> c.isDigit() } },
                             label = "Min µs",
                             keyboardType = KeyboardType.Number,
                             modifier = Modifier.weight(1f)
                         )
                         SubGhzTextField(
-                            value = maxUs.toString(),
-                            onValueChange = { maxUs = it.toIntOrNull()?.coerceIn(10, 50000) ?: 2000 },
+                            value = maxUsText,
+                            onValueChange = { maxUsText = it.filter { c -> c.isDigit() } },
                             label = "Max µs",
                             keyboardType = KeyboardType.Number,
                             modifier = Modifier.weight(1f)
@@ -239,10 +238,10 @@ fun GeneratorScreen(
                     DtmfInputPanel(
                         sequence = dtmfSequence,
                         onSequenceChange = { dtmfSequence = it },
-                        toneMs = dtmfToneMs,
-                        onToneMsChange = { dtmfToneMs = it },
-                        pauseMs = dtmfPauseMs,
-                        onPauseMsChange = { dtmfPauseMs = it },
+                        toneMsText = dtmfToneMsText,
+                        onToneMsTextChange = { dtmfToneMsText = it },
+                        pauseMsText = dtmfPauseMsText,
+                        onPauseMsTextChange = { dtmfPauseMsText = it },
                         sampleRate = dtmfSampleRate,
                         onSampleRateChange = { dtmfSampleRate = it }
                     )
@@ -254,6 +253,13 @@ fun GeneratorScreen(
         SubGhzButton(
             text = "Generate Signal",
             onClick = {
+                val pulseUs = pulseUsText.toIntOrNull()?.coerceIn(50, 5000) ?: 350
+                val shortUs = shortUsText.toIntOrNull()?.coerceIn(50, 10000) ?: 350
+                val longUs = longUsText.toIntOrNull()?.coerceIn(50, 50000) ?: 1050
+                val minUs = minUsText.toIntOrNull()?.coerceIn(10, 10000) ?: 100
+                val maxUs = maxUsText.toIntOrNull()?.coerceIn(10, 50000) ?: 2000
+                val dtmfToneMs = dtmfToneMsText.toIntOrNull()?.coerceIn(20, 500) ?: 100
+                val dtmfPauseMs = dtmfPauseMsText.toIntOrNull()?.coerceIn(20, 500) ?: 100
                 currentTimings = generateTimings(
                     inputMode, selectedProtocol, protocolCode, pulseUs,
                     rawInput, selectedEncoding, shortUs, longUs, minUs, maxUs,
@@ -291,6 +297,8 @@ fun GeneratorScreen(
                 SubGhzButton(
                     text = "Export .sub File",
                     onClick = {
+                        val repeatCount = repeatCountText.toIntOrNull()?.coerceIn(1, 100) ?: 5
+                        val gapUs = gapUsText.toIntOrNull()?.coerceIn(100, 100000) ?: 10000
                         val signal = SubGhzSignal(
                             frequency = freq,
                             preset = selectedPreset,
@@ -321,10 +329,10 @@ fun GeneratorScreen(
 private fun DtmfInputPanel(
     sequence: String,
     onSequenceChange: (String) -> Unit,
-    toneMs: Int,
-    onToneMsChange: (Int) -> Unit,
-    pauseMs: Int,
-    onPauseMsChange: (Int) -> Unit,
+    toneMsText: String,
+    onToneMsTextChange: (String) -> Unit,
+    pauseMsText: String,
+    onPauseMsTextChange: (String) -> Unit,
     sampleRate: Int,
     onSampleRateChange: (Int) -> Unit
 ) {
@@ -406,6 +414,8 @@ private fun DtmfInputPanel(
         }
         InfoRow("Sequence Length", "${sequence.length} digits")
 
+        val toneMs = toneMsText.toIntOrNull() ?: 100
+        val pauseMs = pauseMsText.toIntOrNull() ?: 100
         val totalMs = sequence.length * toneMs + (sequence.length - 1) * pauseMs
         InfoRow("Est. Duration", "${totalMs} ms")
     }
@@ -415,15 +425,15 @@ private fun DtmfInputPanel(
     // Timing controls
     Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
         SubGhzTextField(
-            value = toneMs.toString(),
-            onValueChange = { onToneMsChange(it.toIntOrNull()?.coerceIn(20, 500) ?: 100) },
+            value = toneMsText,
+            onValueChange = { onToneMsTextChange(it.filter { c -> c.isDigit() }) },
             label = "Tone (ms)",
             keyboardType = KeyboardType.Number,
             modifier = Modifier.weight(1f)
         )
         SubGhzTextField(
-            value = pauseMs.toString(),
-            onValueChange = { onPauseMsChange(it.toIntOrNull()?.coerceIn(20, 500) ?: 100) },
+            value = pauseMsText,
+            onValueChange = { onPauseMsTextChange(it.filter { c -> c.isDigit() }) },
             label = "Pause (ms)",
             keyboardType = KeyboardType.Number,
             modifier = Modifier.weight(1f)
