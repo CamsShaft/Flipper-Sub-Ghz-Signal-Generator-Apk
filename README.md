@@ -28,7 +28,7 @@ Generated files are saved to `/sdcard/sub-files/` and are ready to copy to your 
 
 **Signal files are tiny.** A typical `.sub` file is a few kilobytes. If you're trying to load a multi-megabyte file, it's not a sub-GHz signal — don't do it. The app caps binary input at 512 KB and timing arrays at 50,000 entries to keep things sane.
 
-**Audio playback is a preview, not a radio.** The audio engine converts pulse timings to audible tones so you can hear the signal pattern. It does not transmit anything. Playback is capped at 15 seconds and 20,000 timings.
+**Audio playback is a preview, not a radio.** The audio engine converts pulse timings to audible tones so you can hear the signal pattern. It does not transmit anything in the sub-ghz frequencies, but DTMF obviously can be used. Playback is capped at 30 seconds and 20,000 timings
 
 **Waveform rendering has limits.** The canvas downsamples signals beyond 4,000 timings for display. Your full signal is still exported — the waveform view is just a visual summary.
 
