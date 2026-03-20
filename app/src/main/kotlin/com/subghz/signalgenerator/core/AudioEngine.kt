@@ -12,7 +12,7 @@ class AudioEngine {
         const val SAMPLE_RATE = 44100
         private const val CARRIER_FREQ = 800.0
         private const val TWO_PI = 2.0 * Math.PI
-        private const val MAX_SECONDS = 15   // cap playback duration
+        private const val MAX_SECONDS = 30   // cap playback duration
     }
 
     private var audioTrack: AudioTrack? = null
